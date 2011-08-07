@@ -13,4 +13,4 @@
 - (void)takeValuesFromDictionary:(NSDictionary *)properties;
 - (void)takeValue:(id)value forKey:(NSString *)key;
 @end
-#endif;
+#endif

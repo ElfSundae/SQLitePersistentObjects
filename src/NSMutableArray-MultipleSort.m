@@ -17,7 +17,7 @@
 {
 	unsigned	int		stride = 1;
 				BOOL	found = NO;
-	unsigned	int		count = [self count];
+	unsigned	int		count = (int)[self count];
 	unsigned	int		d;
 	
 	while (stride <= count)
@@ -57,7 +57,7 @@
 						[array1 replaceObjectAtIndex: d withObject: a1];
 						[a1 release];
 						va_start(argumentList, array1);         
-						while (eachObject = va_arg(argumentList, id)) 
+						while ( ( eachObject = va_arg(argumentList, id) ) ) 
 						{
 							id ax = [eachObject objectAtIndex:d+stride];
 							id bx = [eachObject objectAtIndex:d];

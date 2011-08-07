@@ -95,6 +95,8 @@ static id findByMethodImp(id self, SEL _cmd, id value)
 
 
 @interface SQLitePersistentObject (private)
++ (dispatch_queue_t)DBOperationQueue;
++ (void)performUsingDBOperationQueue:(void(^)(void))block;
 + (void)tableCheck;
 - (void)setPk:(int)newPk;
 + (NSString *)classNameForTableName:(NSString *)theTable;
@@ -102,6 +104,9 @@ static id findByMethodImp(id self, SEL _cmd, id value)
 - (void)makeClean;
 - (void)markDirty;
 - (BOOL)isDirty;
+- (void)_save;
+-(void)_deleteObjectCascade:(BOOL)cascade;
++(NSArray *)_findByCriteria:(NSString *)criteriaString, ...;
 @end
 @interface SQLitePersistentObject (private_memory)
 + (NSString *)memoryMapKeyForObject:(NSInteger)thePK;
@@ -119,22 +124,27 @@ NSMutableArray *checkedTables;
 #pragma mark Public Class Methods
 + (double)performSQLAggregation: (NSString *)query, ...
 {
-	double ret = -1.0;
-	sqlite3 *database = [[SQLiteInstanceManager sharedManager] database];
+	__block double result = -1.0;
 	
 	// Added variadic ability to all criteria accepting methods -SLyons (10/03/2009)
 	va_list argumentList;
 	va_start(argumentList, query);
 	NSString *queryString = [[NSString alloc] initWithFormat:query arguments:argumentList];
 	
-	sqlite3_stmt *stmt;
-	if (sqlite3_prepare_v2( database,  [queryString UTF8String], -1, &stmt, nil) == SQLITE_OK) {
-		if (sqlite3_step(stmt) == SQLITE_ROW)
-			ret = sqlite3_column_double(stmt, 0);
-		sqlite3_finalize(stmt);
-	}
-	[queryString release];
-	return ret;
+	[SQLitePersistentObject performUsingDBOperationQueue:
+	^{
+		sqlite3 *database = [[SQLiteInstanceManager sharedManager] database];
+
+		sqlite3_stmt *stmt;
+		if (sqlite3_prepare_v2( database,  [queryString UTF8String], -1, &stmt, nil) == SQLITE_OK) {
+			if (sqlite3_step(stmt) == SQLITE_ROW)
+				result = sqlite3_column_double(stmt, 0);
+			sqlite3_finalize(stmt);
+		}
+		[queryString release];
+	}];
+	
+	return result;
 }
 
 + (void)clearCache
@@ -163,54 +173,65 @@ NSMutableArray *checkedTables;
 	va_list argumentList;
 	va_start(argumentList, criteriaString);
 	NSString *queryString = [[NSString alloc] initWithFormat:criteriaString arguments:argumentList];
-	NSArray *array = [self findByCriteria:queryString];
-	[queryString release];
 	
-	if (array != nil)
-		if ([array count] > 0)
-			return [array objectAtIndex:0];
-	return  nil;
+	 NSArray *array = [self findByCriteria:queryString];
+	 [queryString release];
+	 
+	 if (array != nil && [array count] > 0)
+	 {
+		 return [array objectAtIndex:0];
+	 }
+	
+	return nil;
 }
+
 + (NSInteger)count
 {
     return [self countByCriteria:@""];
 }
+
 + (NSInteger)countByCriteria:(NSString *)criteriaString, ...
 {
-	[self tableCheck];
-	NSInteger countOfRecords;
-	countOfRecords = 0;
-	NSString *countQuery;
+	__block NSInteger result = 0;
 	
 	// Added variadic ability to all criteria accepting methods -SLyons (10/03/2009)
 	va_list argumentList;
 	va_start(argumentList, criteriaString);
 	NSString *queryString = [[NSString alloc] initWithFormat:criteriaString arguments:argumentList];
 	
-	countQuery = [NSString stringWithFormat:@"SELECT COUNT(*) FROM %@ %@", [self tableName], queryString];
-	[queryString release];
-	sqlite3 *database = [[SQLiteInstanceManager sharedManager] database];
-	sqlite3_stmt *statement;
-	if (sqlite3_prepare_v2(database, [countQuery UTF8String], -1, &statement, nil) == SQLITE_OK) 
-	{
-		if (sqlite3_step(statement) == SQLITE_ROW)
-			countOfRecords = sqlite3_column_int(statement, 0);
-	} 
-	else NSLog(@"Error determining count of rows in table %@", [self  tableName]);
+	[SQLitePersistentObject performUsingDBOperationQueue:
+	^{
+		[self tableCheck];
+		NSString *countQuery;
+		
+		countQuery = [NSString stringWithFormat:@"SELECT COUNT(*) FROM %@ %@", [self tableName], queryString];
+		[queryString release];
+		sqlite3 *database = [[SQLiteInstanceManager sharedManager] database];
+		sqlite3_stmt *statement;
+		if (sqlite3_prepare_v2(database, [countQuery UTF8String], -1, &statement, nil) == SQLITE_OK) 
+		{
+			if (sqlite3_step(statement) == SQLITE_ROW)
+				result = sqlite3_column_int(statement, 0);
+		} 
+		else NSLog(@"Error determining count of rows in table %@", [self  tableName]);
+		
+		sqlite3_finalize(statement);
+	}];
 	
-	sqlite3_finalize(statement);
-	return countOfRecords;
+	return result;
 }
+
 +(NSArray *)allObjects
 {
 	return [[self class] findByCriteria:@""];
 }
+
 +(void)deleteObject:(NSInteger)inPk cascade:(BOOL)cascade
 {
 	if(inPk < 0)
 		return;
 
-	SQLitePersistentObject* objToDelete = [self findByPK:inPk];
+	SQLitePersistentObject* objToDelete = [self findByPK:(int)inPk];
 	if(objToDelete == nil)
 		return;
 	
@@ -223,6 +244,22 @@ NSMutableArray *checkedTables;
 }
 
 +(NSArray *)findByCriteria:(NSString *)criteriaString, ...
+{
+	__block NSArray* result = nil;
+	
+	va_list argumentList;
+	va_start(argumentList, criteriaString);
+	NSString *queryString = [[NSString alloc] initWithFormat:criteriaString arguments:argumentList];
+	
+	[SQLitePersistentObject performUsingDBOperationQueue:
+	^{
+		result = [self _findByCriteria:queryString];
+	}];
+	
+	return result;
+}
+
++(NSArray *)_findByCriteria:(NSString *)criteriaString, ...
 {
 	[[self class] tableCheck];
 	NSMutableArray *ret = [NSMutableArray array];
@@ -680,13 +717,45 @@ NSMutableArray *checkedTables;
 	
 	return theProps;	
 }
+
+#pragma mark -
+#pragma mark Private Class Methods
+
++ (dispatch_queue_t)DBOperationQueue
+{
+	static dispatch_queue_t _dbOperationQueue;
+	static dispatch_once_t   onceToken;
+	dispatch_once(&onceToken, 
+	^{
+		_dbOperationQueue = dispatch_queue_create("SQLitePeristentObject.DBOperationQueue", DISPATCH_QUEUE_SERIAL);
+	});	
+	
+	return _dbOperationQueue;
+}
+
++ (void)performUsingDBOperationQueue:(void(^)(void))block
+{
+	dispatch_retain([SQLitePersistentObject DBOperationQueue]);
+	dispatch_sync([SQLitePersistentObject DBOperationQueue], block);
+	dispatch_release([SQLitePersistentObject DBOperationQueue]);	
+}
+
 #pragma mark -
 #pragma mark Public Instance Methods
 -(int)pk
 {
-	return pk;
+	return (int)pk;
 }
--(void)save
+
+- (void)save
+{
+	[SQLitePersistentObject performUsingDBOperationQueue:
+	^{
+		 [self _save];
+	}];
+}
+
+- (void)_save
 {
 	if (alreadySaving)
 		return;
@@ -807,7 +876,7 @@ NSMutableArray *checkedTables;
 		if (result == SQLITE_OK)
 		{
 			int colIndex = 1;
-			sqlite3_bind_int(stmt, colIndex++, pk);
+			sqlite3_bind_int(stmt, colIndex++, (int)pk);
 			
 			for (NSString *propName in props)
 			{
@@ -860,7 +929,7 @@ NSMutableArray *checkedTables;
 						else if ([[theProperty class] shouldBeStoredInBlob])
 						{
 							NSData *data = [theProperty sqlBlobRepresentationOfSelf];
-							sqlite3_bind_blob(stmt, colIndex++, [data bytes], [data length], NULL);
+							sqlite3_bind_blob(stmt, colIndex++, [data bytes], (int)[data length], NULL);
 						}
 						else
 						{
@@ -902,7 +971,7 @@ NSMutableArray *checkedTables;
 											if ([[oneObject class] shouldBeStoredInBlob])
 											{
 												NSData *data = [oneObject sqlBlobRepresentationOfSelf];
-												sqlite3_bind_blob(xStmt, 1, [data bytes], [data length], NULL);
+												sqlite3_bind_blob(xStmt, 1, [data bytes], (int)[data length], NULL);
 											}
 											else
 											{
@@ -943,7 +1012,7 @@ NSMutableArray *checkedTables;
 											if ([[oneObject class] shouldBeStoredInBlob])
 											{
 												NSData *data = [oneObject sqlBlobRepresentationOfSelf];
-												sqlite3_bind_blob(xStmt, 1, [data bytes], [data length], NULL);
+												sqlite3_bind_blob(xStmt, 1, [data bytes], (int)[data length], NULL);
 											}
 											else
 												sqlite3_bind_text(xStmt, 1, [[oneObject sqlColumnRepresentationOfSelf] UTF8String], -1, NULL);
@@ -982,7 +1051,7 @@ NSMutableArray *checkedTables;
 											if ([[oneObject class] shouldBeStoredInBlob])
 											{
 												NSData *data = [oneObject sqlBlobRepresentationOfSelf];
-												sqlite3_bind_blob(xStmt, 1, [data bytes], [data length], NULL);
+												sqlite3_bind_blob(xStmt, 1, [data bytes], (int)[data length], NULL);
 											}
 											else
 												sqlite3_bind_text(xStmt, 1, [[oneObject sqlColumnRepresentationOfSelf] UTF8String], -1, NULL);
@@ -1083,11 +1152,21 @@ NSMutableArray *checkedTables;
     // pk must be greater than 0 if its on the db
 	return pk > 0;
 }
+
 -(void)deleteObject
 {
 	[self deleteObjectCascade:NO];
 }
+
 -(void)deleteObjectCascade:(BOOL)cascade
+{
+	[SQLitePersistentObject performUsingDBOperationQueue:
+	^{
+		[self _deleteObjectCascade:NO];
+	}];
+}
+
+-(void)_deleteObjectCascade:(BOOL)cascade
 {
 	if(pk < 0)
 		return;
@@ -1316,6 +1395,9 @@ NSMutableArray *checkedTables;
 }
 - (void)dealloc 
 {
+	for (NSString *oneProp in [[self class] propertiesWithEncodedTypes])
+		[self removeObserver:self forKeyPath:oneProp];
+	
 	[[self class] unregisterObject:self];
 	[super dealloc];
 }

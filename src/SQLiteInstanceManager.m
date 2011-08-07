@@ -62,11 +62,11 @@ static SQLiteInstanceManager *sharedSQLiteManager = nil;
 {
 	return self;
 }
-- (unsigned)retainCount
+- (NSUInteger)retainCount
 {
 	return UINT_MAX;  //denotes an object that cannot be released
 }
-- (void)release
+- (oneway void)release
 {
 	// never release
 }
@@ -187,7 +187,7 @@ static SQLiteInstanceManager *sharedSQLiteManager = nil;
 		NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 		NSString *saveDirectory = [paths objectAtIndex:0];
 #endif
-		NSString *saveFileName = [NSString stringWithFormat:@"%@.sqlite3", ret];
+		NSString *saveFileName = [NSString stringWithFormat:@"%@.db", ret];
 		NSString *filepath = [saveDirectory stringByAppendingPathComponent:saveFileName];
 		
 		databaseFilepath = [filepath retain];
