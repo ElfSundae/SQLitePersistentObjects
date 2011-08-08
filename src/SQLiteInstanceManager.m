@@ -39,9 +39,9 @@ static SQLiteInstanceManager *sharedSQLiteManager = nil;
 	@synchronized(self) 
 	{
 		if (sharedSQLiteManager == nil) 
-			[[self alloc] init]; 
+			sharedSQLiteManager = [[self alloc] init]; 
 	}
-	return sharedSQLiteManager;
+	return [sharedSQLiteManager autorelease];
 }
 + (id)allocWithZone:(NSZone *)zone
 {

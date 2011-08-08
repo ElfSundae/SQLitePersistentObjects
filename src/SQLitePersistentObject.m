@@ -904,14 +904,15 @@ NSMutableArray *checkedTables;
 						 [propType isEqualToString:@"f"] || // float
 						 [propType isEqualToString:@"d"] )  // double
 				{
-					sqlite3_bind_text(stmt, colIndex++, [[theProperty stringValue] UTF8String], -1, NULL);
+					NSString* value = [theProperty stringValue];
+					sqlite3_bind_text(stmt, colIndex++, [value UTF8String], -1, SQLITE_TRANSIENT);
 				}	
 				else if ([propType isEqualToString:@"c"] ||	// char
 						 [propType isEqualToString:@"C"] ) // unsigned char
 					
 				{
 					NSString *theString = [theProperty stringValue];
-					sqlite3_bind_text(stmt, colIndex++, [theString UTF8String], -1, NULL);
+					sqlite3_bind_text(stmt, colIndex++, [theString UTF8String], -1, SQLITE_TRANSIENT);
 				}
 				else if ([propType hasPrefix:@"@"] ) // Object
 				{
@@ -924,16 +925,17 @@ NSMutableArray *checkedTables;
 						if ([[theProperty class] isSubclassOfClass:[SQLitePersistentObject class]])
 						{
 							[theProperty save];
-							sqlite3_bind_text(stmt, colIndex++, [[theProperty memoryMapKey] UTF8String], -1, NULL);
+							sqlite3_bind_text(stmt, colIndex++, [[theProperty memoryMapKey] UTF8String], -1, SQLITE_TRANSIENT);
 						}
 						else if ([[theProperty class] shouldBeStoredInBlob])
 						{
 							NSData *data = [theProperty sqlBlobRepresentationOfSelf];
-							sqlite3_bind_blob(stmt, colIndex++, [data bytes], (int)[data length], NULL);
+							sqlite3_bind_blob(stmt, colIndex++, [data bytes], (int)[data length], SQLITE_TRANSIENT);
 						}
 						else
 						{
-							sqlite3_bind_text(stmt, colIndex++, [[theProperty sqlColumnRepresentationOfSelf] UTF8String], -1, NULL);
+							NSString* value = [theProperty sqlColumnRepresentationOfSelf];
+							sqlite3_bind_text(stmt, colIndex++, [value UTF8String], -1, SQLITE_TRANSIENT);
 						}
 					}
 					else
@@ -971,11 +973,11 @@ NSMutableArray *checkedTables;
 											if ([[oneObject class] shouldBeStoredInBlob])
 											{
 												NSData *data = [oneObject sqlBlobRepresentationOfSelf];
-												sqlite3_bind_blob(xStmt, 1, [data bytes], (int)[data length], NULL);
+												sqlite3_bind_blob(xStmt, 1, [data bytes], (int)[data length], SQLITE_TRANSIENT);
 											}
 											else
 											{
-												sqlite3_bind_text(xStmt, 1, [[oneObject sqlColumnRepresentationOfSelf] UTF8String], -1, NULL);	
+												sqlite3_bind_text(xStmt, 1, [[oneObject sqlColumnRepresentationOfSelf] UTF8String], -1, SQLITE_TRANSIENT);	
 											}
 											
 											if (sqlite3_step(xStmt) != SQLITE_DONE)
@@ -1012,10 +1014,10 @@ NSMutableArray *checkedTables;
 											if ([[oneObject class] shouldBeStoredInBlob])
 											{
 												NSData *data = [oneObject sqlBlobRepresentationOfSelf];
-												sqlite3_bind_blob(xStmt, 1, [data bytes], (int)[data length], NULL);
+												sqlite3_bind_blob(xStmt, 1, [data bytes], (int)[data length], SQLITE_TRANSIENT);
 											}
 											else
-												sqlite3_bind_text(xStmt, 1, [[oneObject sqlColumnRepresentationOfSelf] UTF8String], -1, NULL);
+												sqlite3_bind_text(xStmt, 1, [[oneObject sqlColumnRepresentationOfSelf] UTF8String], -1, SQLITE_TRANSIENT);
 											
 											if (sqlite3_step(xStmt) != SQLITE_DONE)
 												NSLog(@"Error inserting or updating cross-reference row");
@@ -1051,10 +1053,10 @@ NSMutableArray *checkedTables;
 											if ([[oneObject class] shouldBeStoredInBlob])
 											{
 												NSData *data = [oneObject sqlBlobRepresentationOfSelf];
-												sqlite3_bind_blob(xStmt, 1, [data bytes], (int)[data length], NULL);
+												sqlite3_bind_blob(xStmt, 1, [data bytes], (int)[data length], SQLITE_TRANSIENT);
 											}
 											else
-												sqlite3_bind_text(xStmt, 1, [[oneObject sqlColumnRepresentationOfSelf] UTF8String], -1, NULL);
+												sqlite3_bind_text(xStmt, 1, [[oneObject sqlColumnRepresentationOfSelf] UTF8String], -1, SQLITE_TRANSIENT);
 											
 											if (sqlite3_step(xStmt) != SQLITE_DONE)
 												NSLog(@"Error inserting or updating cross-reference row");

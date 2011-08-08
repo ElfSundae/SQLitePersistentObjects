@@ -49,7 +49,7 @@ typedef enum SQLITE3LockingMode
 @interface SQLiteInstanceManager : NSObject {
 
 	@private
-	SQLiteInstanceManager *singleton;
+	//SQLiteInstanceManager *singleton;
 	NSString *databaseFilepath;
 	sqlite3 *database;
 }
