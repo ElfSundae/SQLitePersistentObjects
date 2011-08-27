@@ -27,6 +27,36 @@
 #ifdef TARGET_OS_COCOTRON
 #import <objc/objc-class.h>
 #endif
+#import <objc/runtime.h>
+
+static NSArray* sqlpo_class_getSubclasses(Class parentClass)
+{
+    int numClasses 	= objc_getClassList(NULL, 0);
+    Class* classes 	= malloc(sizeof(Class) * numClasses);
+    numClasses 		= objc_getClassList(classes, numClasses);
+	
+    NSMutableArray* result = [NSMutableArray array];
+	
+    for (NSInteger i = 0; i < numClasses; i++)
+    {
+        Class superClass = classes[i];
+        do
+        {
+            superClass = class_getSuperclass(superClass);
+        } while( superClass && superClass != parentClass );
+		
+        if( superClass == nil )
+        {
+            continue;
+        }
+		
+        [result addObject:classes[i]];
+    }
+	
+    free(classes);
+	
+    return result;
+}
 
 static id aggregateMethodWithCriteriaImp(id self, SEL _cmd, id value)
 {
@@ -107,6 +137,8 @@ static id findByMethodImp(id self, SEL _cmd, id value)
 - (void)_save;
 -(void)_deleteObjectCascade:(BOOL)cascade;
 +(NSArray *)_findByCriteria:(NSString *)criteriaString, ...;
++(SQLitePersistentObject*)_findFirstByCriteria:(NSString *)criteriaString, ...;
++(SQLitePersistentObject*)_findByPK:(int)inPk;
 @end
 @interface SQLitePersistentObject (private_memory)
 + (NSString *)memoryMapKeyForObject:(NSInteger)thePK;
@@ -117,11 +149,29 @@ static id findByMethodImp(id self, SEL _cmd, id value)
 
 NSMutableDictionary *objectMap;
 NSMutableArray *checkedTables;
+static NSMutableDictionary* _knownTables;
 
 @implementation SQLitePersistentObject
 
 #pragma mark -
 #pragma mark Public Class Methods
+
++ (void)load
+{
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, 
+	^{
+		  _knownTables = [[NSMutableDictionary alloc] init];
+	});
+	
+	NSArray* subclasses = sqlpo_class_getSubclasses([self class]);
+	
+	[subclasses enumerateObjectsUsingBlock:^(Class klass, NSUInteger idx, BOOL *stop) 
+	{
+		[_knownTables setObject:NSStringFromClass(klass) forKey:[klass tableName]];
+	}];
+}
+
 + (double)performSQLAggregation: (NSString *)query, ...
 {
 	__block double result = -1.0;
@@ -169,12 +219,28 @@ NSMutableArray *checkedTables;
 
 +(SQLitePersistentObject *)findFirstByCriteria:(NSString *)criteriaString, ...
 {
+	__block SQLitePersistentObject* result = nil;
+	
+	va_list argumentList;
+	va_start(argumentList, criteriaString);
+	NSString *queryString = [[NSString alloc] initWithFormat:criteriaString arguments:argumentList];
+	
+	[SQLitePersistentObject performUsingDBOperationQueue:
+	 ^{
+		 result = [self _findFirstByCriteria:queryString];
+	 }];
+	
+	return result;
+}
+
++(SQLitePersistentObject *)_findFirstByCriteria:(NSString *)criteriaString, ...
+{
 	// Added variadic ability to all criteria accepting methods -SLyons (10/03/2009)
 	va_list argumentList;
 	va_start(argumentList, criteriaString);
 	NSString *queryString = [[NSString alloc] initWithFormat:criteriaString arguments:argumentList];
 	
-	 NSArray *array = [self findByCriteria:queryString];
+	 NSArray *array = [self _findByCriteria:queryString];
 	 [queryString release];
 	 
 	 if (array != nil && [array count] > 0)
@@ -238,9 +304,22 @@ NSMutableArray *checkedTables;
 	[objToDelete deleteObjectCascade:cascade];
 	
 }
+
 +(SQLitePersistentObject *)findByPK:(int)inPk
 {
-	return [self findFirstByCriteria:[NSString stringWithFormat:@"WHERE pk = %d", inPk]];
+	__block SQLitePersistentObject* result = nil;
+	
+	[SQLitePersistentObject performUsingDBOperationQueue:
+	 ^{
+		 result = [self _findByPK:inPk];
+	 }];
+	
+	return result;
+}
+
++(SQLitePersistentObject *)_findByPK:(int)inPk
+{
+	return [self _findFirstByCriteria:[NSString stringWithFormat:@"WHERE pk = %d", inPk]];
 }
 
 +(NSArray *)findByCriteria:(NSString *)criteriaString, ...
@@ -375,7 +454,7 @@ NSMutableArray *checkedTables;
 								NSString *classString = [parts objectAtIndex:0];
 								int fk = [[parts objectAtIndex:1] intValue];
 								Class propClass = objc_lookUpClass([classString UTF8String]);
-								id fkObj = [propClass findByPK:fk];
+								id fkObj = [propClass _findByPK:fk];
 								[oneItem setValue:fkObj forKey:propName];
 							}
 						}
@@ -432,7 +511,7 @@ NSMutableArray *checkedTables;
 										NSString *fkTableName = (fkTableNameRaw == nil) ? nil : [NSString stringWithUTF8String:fkTableNameRaw];
 										NSString *propClassName = [[self class] classNameForTableName:fkTableName];
 										Class propClass = objc_lookUpClass([propClassName UTF8String]);
-										id oneObject = [propClass findFirstByCriteria:[NSString stringWithFormat:@"where pk = %d", fk]];
+										id oneObject = [propClass _findFirstByCriteria:[NSString stringWithFormat:@"where pk = %d", fk]];
 										if (oneObject != nil)
 											[set addObject:oneObject];
 									}
@@ -482,7 +561,7 @@ NSMutableArray *checkedTables;
 										NSString *fkTableName = (fkTableNameRaw == nil) ? nil : [NSString stringWithUTF8String:fkTableNameRaw];
 										NSString *propClassName = [[self class] classNameForTableName:fkTableName];
 										Class propClass = objc_lookUpClass([propClassName UTF8String]);
-										id oneObject = [propClass findFirstByCriteria:[NSString stringWithFormat:@"where pk = %d", fk]];
+										id oneObject = [propClass _findFirstByCriteria:[NSString stringWithFormat:@"where pk = %d", fk]];
 										if (oneObject != nil)
 											[array addObject:oneObject];
 									}
@@ -532,9 +611,11 @@ NSMutableArray *checkedTables;
 									{
 										const char *fkTableNameRaw = (const char *)sqlite3_column_text(dictionaryStmt, 2);
 										NSString *fkTableName = (fkTableNameRaw == nil) ? nil : [NSString stringWithUTF8String:fkTableNameRaw];
-										NSString *propClassName = [[self class] classNameForTableName:fkTableName];
+//										NSString *propClassName = [[self class] classNameForTableName:fkTableName];
+										NSString* propClassName = [_knownTables objectForKey:fkTableName];
 										Class propClass = objc_lookUpClass([propClassName UTF8String]);
-										id oneObject = [propClass findFirstByCriteria:[NSString stringWithFormat:@"where pk = %d", fk]];
+										
+										id oneObject = [propClass _findFirstByCriteria:[NSString stringWithFormat:@"where pk = %d", fk]];
 										if (oneObject != nil)
 											[dictionary setObject:oneObject forKey:key];
 									}
