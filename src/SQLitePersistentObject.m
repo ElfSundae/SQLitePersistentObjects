@@ -924,7 +924,7 @@ NSMutableArray *checkedTables;
 						
 						if ([[theProperty class] isSubclassOfClass:[SQLitePersistentObject class]])
 						{
-							[theProperty save];
+							[theProperty _save];
 							sqlite3_bind_text(stmt, colIndex++, [[theProperty memoryMapKey] UTF8String], -1, SQLITE_TRANSIENT);
 						}
 						else if ([[theProperty class] shouldBeStoredInBlob])
@@ -955,7 +955,7 @@ NSMutableArray *checkedTables;
 							{
 								if ([oneObject isKindOfClass:[SQLitePersistentObject class]])
 								{
-									[oneObject save];
+									[oneObject _save];
 									NSString *xrefInsert = [NSString stringWithFormat:@"insert into %@_%@ (parent_pk, array_index, fk, fk_table_name) values (%d, %d, %d, '%@')", [[self class] tableName], [propName stringAsSQLColumnName],  pk, arrayIndex++, [oneObject pk], [[oneObject class] tableName]];
 									if (sqlite3_exec (database, [xrefInsert UTF8String], NULL, NULL, &errmsg) != SQLITE_OK)
 										NSLog(@"Error inserting child rows in xref table for array: %s", errmsg);
@@ -997,7 +997,7 @@ NSMutableArray *checkedTables;
 								id oneObject = [(NSDictionary *)theProperty objectForKey:oneKey];
 								if ([(NSObject *)oneObject isKindOfClass:[SQLitePersistentObject class]])
 								{
-									[(SQLitePersistentObject *)oneObject save];
+									[(SQLitePersistentObject *)oneObject _save];
 									NSString *xrefInsert = [NSString stringWithFormat:@"insert into %@_%@ (parent_pk, dictionary_key, fk, fk_table_name) values (%d, '%@', %d, '%@')",  [[self class] tableName], [propName stringAsSQLColumnName], pk, oneKey, [(SQLitePersistentObject *)oneObject pk], [[oneObject class] tableName]];
 									if (sqlite3_exec (database, [xrefInsert UTF8String], NULL, NULL, &errmsg) != SQLITE_OK)
 										NSLog(@"Error inserting child rows in xref table for array: %s", errmsg);
