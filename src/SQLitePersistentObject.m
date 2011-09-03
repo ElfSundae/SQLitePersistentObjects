@@ -372,7 +372,8 @@ static NSMutableDictionary* _knownTables;
 			[[self class] registerObjectInMemory:oneItem];			
 			
 			int i;
-			for (i=0; i <  sqlite3_column_count(statement); i++)
+			int column_count = sqlite3_column_count(statement);
+			for (i=0; i <  column_count; i++)
 			{
 				NSString *colName = [NSString stringWithUTF8String:sqlite3_column_name(statement, i)];
 				if ([colName isEqualToString:@"pk"])
@@ -386,8 +387,12 @@ static NSMutableDictionary* _knownTables;
 					NSString *propName = [colName stringAsPropertyString];
 					
 					NSString *colType = [theProps valueForKey:propName];
+					
+					// If we find a column which isn't associated with a property
+					// we just ignore it.
 					if (colType == nil)
-						break;
+						continue;
+					
 					if ([colType isEqualToString:@"i"] || // int
 						[colType isEqualToString:@"l"] || // long
 						[colType isEqualToString:@"q"] || // long long
@@ -876,20 +881,22 @@ static NSMutableDictionary* _knownTables;
 				else
 				{
 					if (isNSSetType(className) || isNSArrayType(className))
+					{
 						for (id oneObject in (NSArray *)theProperty)
-							if ([oneObject isKindOfClass:[SQLitePersistentObject class]])
-								if ([oneObject isDirty])
-									dirty = YES;					
-								else if (isNSDictionaryType(className))
-								{
-									for (id oneKey in [theProperty allKeys])
-									{
-										id oneObject = [theProperty objectForKey:oneKey];
-										if ([oneObject isKindOfClass:[SQLitePersistentObject class]])
-											if ([oneObject isDirty])
-												dirty = YES;
-									}
-								}
+						{
+							if ([oneObject isKindOfClass:[SQLitePersistentObject class]] && [oneObject isDirty])
+								dirty = YES;
+						}
+					}								
+					else if (isNSDictionaryType(className))
+					{
+						for (id oneKey in [theProperty allKeys])
+						{
+							id oneObject = [theProperty objectForKey:oneKey];
+							if ([oneObject isKindOfClass:[SQLitePersistentObject class]] && [oneObject isDirty])
+								dirty = YES;
+						}
+					}
 				}
 			}
 		}

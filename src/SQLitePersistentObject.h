@@ -160,6 +160,11 @@
  */
 -(void)save;
 
+/**
+ Force the object to be marked as dirty so save takes place.
+ */
+- (void)markDirty;
+
 /*
  * Reverts the object back to database state. Any changes that have been
  * made since the object was loaded are undone.
