@@ -910,6 +910,9 @@ static NSMutableDictionary* _knownTables;
 		
 		sqlite3 *database = [[SQLiteInstanceManager sharedManager] database];
 		
+		// Start a SQLite Transaction
+		sqlite3_exec(database, "BEGIN", 0, 0, 0);
+		
 		// If this object is new, we need to figure out the correct primary key value, 
 		// which will be one higher than the current highest pk value in the table.
 		
@@ -1034,7 +1037,6 @@ static NSMutableDictionary* _knownTables;
 						if (sqlite3_exec (database, [xrefDelete UTF8String], NULL, NULL, &errmsg) != SQLITE_OK)
 							NSLog(@"Error deleting child rows in xref table for array: %s", errmsg);
 						sqlite3_free(errmsg);
-						
 						
 						if (isNSArrayType(className))
 						{
@@ -1163,6 +1165,9 @@ static NSMutableDictionary* _knownTables;
 			if (sqlite3_step(stmt) != SQLITE_DONE)
 				NSLog(@"Error inserting or updating row");
 			sqlite3_finalize(stmt);
+			
+			// Finishing SQLite transaction
+			sqlite3_exec(database, "COMMIT", 0, 0, 0);
 		}
 		else
 			NSLog(@"Error preparing save SQL: %s", sqlite3_errmsg(database));
