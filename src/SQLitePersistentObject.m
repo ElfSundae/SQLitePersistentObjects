@@ -55,7 +55,7 @@ static NSArray* sqlpo_class_getSubclasses(Class parentClass)
 	
     free(classes);
 	
-    return result;
+    return [NSArray arrayWithArray:result];
 }
 
 static id aggregateMethodWithCriteriaImp(id self, SEL _cmd, id value)
