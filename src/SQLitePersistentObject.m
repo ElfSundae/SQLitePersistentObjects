@@ -175,8 +175,7 @@ static NSMutableDictionary* _knownTables;
 		[_knownTables setObject:NSStringFromClass(klass) forKey:[klass tableName]];
 	}];
 	
-//	[pool drain];
-	[pool release];
+	[pool drain];
 }
 
 + (double)performSQLAggregation: (NSString *)query, ...
