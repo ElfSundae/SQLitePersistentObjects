@@ -35,7 +35,7 @@ static NSArray* sqlpo_class_getSubclasses(Class parentClass)
     Class* classes 	= malloc(sizeof(Class) * numClasses);
     numClasses 		= objc_getClassList(classes, numClasses);
 	
-    NSMutableArray* result = [NSMutableArray array];
+    NSMutableArray* result = [[NSMutableArray alloc] init];
 	
     for (NSInteger i = 0; i < numClasses; i++)
     {
@@ -55,7 +55,10 @@ static NSArray* sqlpo_class_getSubclasses(Class parentClass)
 	
     free(classes);
 	
-    return [NSArray arrayWithArray:result];
+	NSArray* tmp = [NSArray arrayWithArray:result];
+	[result release];
+	
+    return tmp;
 }
 
 static id aggregateMethodWithCriteriaImp(id self, SEL _cmd, id value)
@@ -164,12 +167,16 @@ static NSMutableDictionary* _knownTables;
 		  _knownTables = [[NSMutableDictionary alloc] init];
 	});
 	
+	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	NSArray* subclasses = sqlpo_class_getSubclasses([self class]);
 	
 	[subclasses enumerateObjectsUsingBlock:^(Class klass, NSUInteger idx, BOOL *stop) 
 	{
 		[_knownTables setObject:NSStringFromClass(klass) forKey:[klass tableName]];
 	}];
+	
+//	[pool drain];
+	[pool release];
 }
 
 + (double)performSQLAggregation: (NSString *)query, ...
