@@ -334,6 +334,7 @@ static NSMutableDictionary* _knownTables;
 	
 	va_list argumentList;
 	va_start(argumentList, criteriaString);
+	
 	NSString *queryString = [[NSString alloc] initWithFormat:criteriaString arguments:argumentList];
 	
 	[SQLitePersistentObject performUsingDBOperationQueue:
@@ -354,7 +355,9 @@ static NSMutableDictionary* _knownTables;
 	// Added variadic ability to all criteria accepting methods -SLyons (10/03/2009)
 	va_list argumentList;
 	va_start(argumentList, criteriaString);
-	NSString *queryString = [[NSString alloc] initWithFormat:criteriaString arguments:argumentList];
+	
+	NSString* formatSafeString = [criteriaString stringByReplacingOccurrencesOfString:@"%" withString:@"%%"];
+	NSString *queryString = [[NSString alloc] initWithFormat:formatSafeString arguments:argumentList];
 	
 	NSString *query = [NSString stringWithFormat:@"SELECT pk,* FROM %@ %@", [[self class] tableName], queryString];
 	[queryString release];
