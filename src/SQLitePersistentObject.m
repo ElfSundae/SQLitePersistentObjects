@@ -1266,7 +1266,7 @@ static NSMutableDictionary* _knownTables;
 {
 	[SQLitePersistentObject performUsingDBOperationQueue:
 	^{
-		[self _deleteObjectCascade:NO];
+		[self _deleteObjectCascade:cascade];
 	}];
 }
 
