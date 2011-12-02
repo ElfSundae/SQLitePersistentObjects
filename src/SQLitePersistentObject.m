@@ -234,6 +234,7 @@ static NSMutableDictionary* _knownTables;
 	[SQLitePersistentObject performUsingDBOperationQueue:
 	 ^{
 		 result = [self _findFirstByCriteria:queryString];
+		 [queryString release];
 	 }];
 	
 	return result;
@@ -340,6 +341,7 @@ static NSMutableDictionary* _knownTables;
 	[SQLitePersistentObject performUsingDBOperationQueue:
 	^{
 		result = [self _findByCriteria:queryString];
+		[queryString release];
 	}];
 	
 	return result;
