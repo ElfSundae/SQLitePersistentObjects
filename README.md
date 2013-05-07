@@ -1,4 +1,4 @@
 SQLitePersistentObjects
 =======================
 
-SQLite Persistent Objects.
+SQLite Persistent Objects
