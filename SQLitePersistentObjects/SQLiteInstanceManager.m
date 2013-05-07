@@ -18,10 +18,6 @@
 // included Readme.txt file
 // ----------------------------------------------------------------------
 
-#if __has_feature(objc_arc)
-#error All SQLitePersistentObjects files must be compiled with Non-ARC. Use -fno-objc-arc flag.
-#endif
-
 
 #import "SQLiteInstanceManager.h"
 #import "SQLitePersistentObject.h"

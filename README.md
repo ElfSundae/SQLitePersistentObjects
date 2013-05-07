@@ -8,8 +8,11 @@ Overview: http://code.google.com/p/sqlitepersistentobjects/source/browse/trunk/R
 Setup
 =====================
 
-1. Add all sources from `src` directory to your Xcode project. 
+1. Add `SQLitePersistentObjects` directory to your Xcode project. 
 2. Link the `libsqlite3.dylib` framework.
+3. If your project enabled ARC, set `-fno-objc-arc` flag to all SQLitePersistentObjects source files. <br>
+Step: Open `Project Setting`, select target, go to `Build Phases`, shift-select all files `...in SQLitePersistentObjects`, then press Enter, fill in `-fno-objc-arc` in the popped textbox, then press Enter, it will be done.<br>
+![no-arc](https://github.com/ElfSundae/SQLitePersistentObjects/raw/master/no-arc.jpg "no-arc")
 
 Usage
 ======================
