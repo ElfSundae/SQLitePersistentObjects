@@ -166,7 +166,7 @@ static NSUInteger _paging = 10;
                 UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
                 if (nil == cell) {
                         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellID];
-                        UILabel *lable = [[UILabel alloc] initWithFrame:CGRectMake(cell.contentView.frame.size.width - 200, 0, 200, cell.contentView.frame.size.height)];
+                        UILabel *lable = [[UILabel alloc] initWithFrame:CGRectMake(cell.contentView.frame.size.width - 200, 0, 190, cell.contentView.frame.size.height)];
                         lable.backgroundColor = [UIColor clearColor];
                         lable.tag = 100;
                         lable.textAlignment = UITextAlignmentRight;
@@ -222,8 +222,8 @@ static NSUInteger _paging = 10;
                 [UIAlertView alertViewWithTitle:@"Product info" message:[p description] cancelButtonTitle:@"OK" customizationBlock:nil dismissBlock:nil cancelBlock:nil otherButtonTitles:nil, nil];
         } else if (1 == indexPath.section) {
                 [self loadPagingData:YES];
-                [tableView deselectRowAtIndexPath:indexPath animated:YES];
         }
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 @end

@@ -19,7 +19,7 @@
 {
         return [NSArray arrayWithObjects:
                 [NSArray arrayWithObjects:@"productId", nil],
-                [NSArray arrayWithObjects:@"price", nil],
+                [NSArray arrayWithObjects:@"addDate", nil],
                 [NSArray arrayWithObjects:@"price", @"addDate", nil]
                 , nil];
 }
@@ -27,6 +27,19 @@
 + (NSArray *)transients
 {
         return [NSArray arrayWithObjects:@"isNewlyAdded", nil];
+}
+
+- (NSString *)description
+{
+        static NSDateFormatter *_formatter = nil;
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+                _formatter = [[NSDateFormatter alloc] init];
+                [_formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];
+        });
+        NSString *date = [_formatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:self.addDate]];
+        return [NSString stringWithFormat:@"ID: %@\nName: %@\nPrice: $%.2f\naddDate: %@",
+                self.productId, self.name, self.price, date];
 }
 
 #pragma mark - 
@@ -56,18 +69,6 @@
         return [self findByCriteria:@"ORDER BY add_date desc"];
 }
 
-- (NSString *)description
-{
-        static NSDateFormatter *_formatter = nil;
-        static dispatch_once_t onceToken;
-        dispatch_once(&onceToken, ^{
-                _formatter = [[NSDateFormatter alloc] init];
-                [_formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];
-        });
-        NSString *date = [_formatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:self.addDate]];
-        return [NSString stringWithFormat:@"ID: %@\nName: %@\nPrice: $%.2f\naddDate: %@",
-                self.productId, self.name, self.price, date];
-}
 - (void)saveToDatabase
 {
         Product *p = [[self class] productWithID:self.productId ifCreateNew:NO];
