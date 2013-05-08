@@ -34,7 +34,7 @@ Usage
 + (NSArray *)indices
 {
         return [NSArray arrayWithObjects:
-                [NSArray arrayWithObjects:@"Id", nil],
+                [NSArray arrayWithObjects:@"pID", nil],
                 [NSArray arrayWithObjects:@"price", nil]
                 , nil];
 }
