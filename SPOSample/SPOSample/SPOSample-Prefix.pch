@@ -12,3 +12,10 @@
         #import <UIKit/UIKit.h>
         #import <Foundation/Foundation.h>
 #endif
+
+#import "ESDefines.h"
+#import "UIActionSheet+ESBlock.h"
+#import "UIAlertView+ESBlock.h"
+
+#import "SQLitePersistentObject.h"
+#import "Product.h"
