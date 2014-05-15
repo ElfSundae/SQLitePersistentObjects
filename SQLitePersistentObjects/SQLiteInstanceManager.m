@@ -187,7 +187,7 @@ static SQLiteInstanceManager *sharedSQLiteManager = nil;
 		NSString *saveDirectory = [basePath stringByAppendingPathComponent:appName];
 #else
 		NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-		NSString *saveDirectory = [paths objectAtIndex:0];
+		NSString *saveDirectory = paths[0];
 #endif
 		NSString *saveFileName = [NSString stringWithFormat:@"%@.db", ret];
 		NSString *filepath = [saveDirectory stringByAppendingPathComponent:saveFileName];

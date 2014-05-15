@@ -14,7 +14,7 @@
 {
 	for (id oneKey in [properties allKeys])
 	{
-		id oneObject = [properties objectForKey:oneKey];
+		id oneObject = properties[oneKey];
 		[self setValue:oneObject forKey:oneKey];
 	}
 }

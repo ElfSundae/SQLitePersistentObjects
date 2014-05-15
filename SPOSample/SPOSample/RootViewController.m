@@ -173,7 +173,7 @@ static NSUInteger _paging = 10;
                         lable.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
                         [cell.contentView addSubview:lable];
                 }
-                Product *p = [self.list objectAtIndex:indexPath.row];
+                Product *p = (self.list)[indexPath.row];
                 cell.textLabel.text = p.name;
                 cell.textLabel.textColor = (p.isNewlyAdded ? [UIColor redColor]: [UIColor blackColor]);
                 [(UILabel *)[cell.contentView viewWithTag:100] setText:p.productId];
@@ -206,7 +206,7 @@ static NSUInteger _paging = 10;
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
         if (0 == indexPath.section && UITableViewCellEditingStyleDelete == editingStyle) {
-                Product *p = [self.list objectAtIndex:indexPath.row];
+                Product *p = (self.list)[indexPath.row];
                 [self.list removeObject:p];
                 [p deleteObject];
                 [self.tableView beginUpdates];
@@ -218,7 +218,7 @@ static NSUInteger _paging = 10;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
         if (0 == indexPath.section) {
-                Product *p = [self.list objectAtIndex:indexPath.row];
+                Product *p = (self.list)[indexPath.row];
                 [UIAlertView alertViewWithTitle:@"Product info" message:[p description] cancelButtonTitle:@"OK" customizationBlock:nil dismissBlock:nil cancelBlock:nil otherButtonTitles:nil, nil];
         } else if (1 == indexPath.section) {
                 [self loadPagingData:YES];

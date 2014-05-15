@@ -77,7 +77,7 @@
 //		[numberFormatter setNegativePrefix:[[NSLocale currentLocale] negativePrefix]];
 		
 	
-		ret = [numberFormatter stringFromNumber:[NSNumber numberWithFloat:inValue]];
+		ret = [numberFormatter stringFromNumber:@(inValue)];
 		return ret;
 
 }

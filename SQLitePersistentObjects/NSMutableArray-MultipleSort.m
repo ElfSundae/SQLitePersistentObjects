@@ -35,35 +35,35 @@
 			d = c - stride;
 			while (!found)
 			{
-				id			a = [self objectAtIndex: d + stride];
-				id			b = [self objectAtIndex: d];
+				id			a = self[d + stride];
+				id			b = self[d];
 				
 				NSComparisonResult	result = (*compare)(a, b, (void *)comparator);
 				
 				if (result < 0)
 				{
 					//[a retain];
-					[self replaceObjectAtIndex: d + stride withObject: b];
-					[self replaceObjectAtIndex: d withObject: a];
+					self[d + stride] = b;
+					self[d] = a;
 					
 					id eachObject;
 					va_list argumentList;
 					if (array1)                     
 					{   
-						id a1 = [array1 objectAtIndex:d+stride];
-						id b1 = [array1 objectAtIndex:d];
+						id a1 = array1[d+stride];
+						id b1 = array1[d];
 						//[a1 retain];
-						[array1 replaceObjectAtIndex: d + stride withObject:b1];
-						[array1 replaceObjectAtIndex: d withObject: a1];
+						array1[d + stride] = b1;
+						array1[d] = a1;
 						//[a1 release];
 						va_start(argumentList, array1);         
 						while ( ( eachObject = va_arg(argumentList, id) ) ) 
 						{
-							id ax = [eachObject objectAtIndex:d+stride];
-							id bx = [eachObject objectAtIndex:d];
+							id ax = eachObject[d+stride];
+							id bx = eachObject[d];
 							//[ax retain];
-							[eachObject replaceObjectAtIndex: d + stride withObject:bx];
-							[eachObject replaceObjectAtIndex: d withObject: ax];
+							eachObject[d + stride] = bx;
+							eachObject[d] = ax;
 							//[ax release];
 						}
 						va_end(argumentList);

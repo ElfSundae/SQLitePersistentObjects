@@ -17,16 +17,14 @@
 
 + (NSArray *)indices
 {
-        return [NSArray arrayWithObjects:
-                [NSArray arrayWithObjects:@"productId", nil],
-                [NSArray arrayWithObjects:@"addDate", nil],
-                [NSArray arrayWithObjects:@"price", @"addDate", nil]
-                , nil];
+        return @[@[@"productId"],
+                @[@"addDate"],
+                @[@"price", @"addDate"]];
 }
 
 + (NSArray *)transients
 {
-        return [NSArray arrayWithObjects:@"isNewlyAdded", nil];
+        return @[@"isNewlyAdded"];
 }
 
 - (NSString *)description

@@ -23,11 +23,11 @@
 @implementation NSObject(ClassName)
 - (NSString *)className
 {
-	return [NSString stringWithUTF8String:class_getName([self class])];
+	return @(class_getName([self class]));
 }
 + (NSString *)className
 {
-	return [NSString stringWithUTF8String:class_getName(self)];
+	return @(class_getName(self));
 }
 
 @end
