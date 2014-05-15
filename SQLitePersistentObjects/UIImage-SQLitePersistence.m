@@ -17,7 +17,7 @@
 // included Readme.txt file
 // ----------------------------------------------------------------------
 #if (TARGET_OS_IPHONE)
-#import "NSObject-SQLitePersistence.h"
+#import "UIImage-SQLitePersistence.h"
 
 @implementation UIImage(SQLitePersistence)
 + (id)objectWithSQLBlobRepresentation:(NSData *)data

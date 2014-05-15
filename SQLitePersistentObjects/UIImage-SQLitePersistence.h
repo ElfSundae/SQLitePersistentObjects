@@ -18,6 +18,7 @@
 // ----------------------------------------------------------------------
 #if (TARGET_OS_IPHONE)
 #import <UIKit/UIKit.h>
+#import "NSObject-SQLitePersistence.h"
 
 @interface UIImage(SQLitePersistence) <SQLitePersistence>
 + (id)objectWithSQLBlobRepresentation:(NSData *)data;
