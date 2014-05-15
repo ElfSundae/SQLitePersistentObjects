@@ -7,6 +7,7 @@
 //
 
 #import "RootViewController.h"
+#import "SQLiteInstanceManager.h"
 
 @interface RootViewController () <UIAlertViewDelegate>
 @property (nonatomic, strong) NSMutableArray *list;
@@ -137,6 +138,11 @@ static NSUInteger _paging = 10;
         
         [self.tableView reloadData];
         
+//        [SQLiteInstanceManager reset];
+//        NSString *dbPath = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES)[0]
+//                            stringByAppendingPathComponent:@"test/test.db"];
+//        [[SQLiteInstanceManager sharedManager] setDatabaseFilepath:dbPath];
+
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////

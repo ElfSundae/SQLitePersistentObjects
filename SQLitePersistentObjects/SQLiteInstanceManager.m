@@ -137,10 +137,10 @@ static SQLiteInstanceManager *sharedSQLiteManager = nil;
 }
 - (void)deleteDatabase
 {
+        [self close];
 	NSString* path = [self databaseFilepath];
 	NSFileManager* fm = [NSFileManager defaultManager];
 	[fm removeItemAtPath:path error:NULL];
-	database = NULL;
 	[SQLitePersistentObject clearCache];
 }
 - (void)vacuum
@@ -163,6 +163,28 @@ static SQLiteInstanceManager *sharedSQLiteManager = nil;
 //	[databaseFilepath release];
 //	[super dealloc];
 //}
+
+- (void)close
+{
+        if (database) {
+		sqlite3_close(database);
+		database = NULL;
+	}
+}
+
++ (void)reset
+{
+        @synchronized(self) {
+		if (nil != sharedSQLiteManager) {
+			[sharedSQLiteManager close];
+                        [SQLitePersistentObject clearCache];
+                        sharedSQLiteManager = nil;
+		}
+	}
+        
+        [self sharedManager];
+}
+
 #pragma mark -
 #pragma mark Private Methods
 
@@ -186,7 +208,7 @@ static SQLiteInstanceManager *sharedSQLiteManager = nil;
 		NSString *basePath = ([paths count] > 0) ? [paths objectAtIndex:0] : NSTemporaryDirectory();
 		NSString *saveDirectory = [basePath stringByAppendingPathComponent:appName];
 #else
-		NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+		NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
 		NSString *saveDirectory = paths[0];
 #endif
 		NSString *saveFileName = [NSString stringWithFormat:@"%@.db", ret];
@@ -198,5 +220,16 @@ static SQLiteInstanceManager *sharedSQLiteManager = nil;
 			[[NSFileManager defaultManager] createDirectoryAtPath:saveDirectory withIntermediateDirectories:YES attributes:nil error:nil];
 	}
 	return databaseFilepath;
+}
+
+- (void)setDatabaseFilepath:(NSString *)path
+{
+        if (path) {
+                NSString *dir = [path stringByDeletingLastPathComponent];
+                if (![[NSFileManager defaultManager] fileExistsAtPath:dir]) {
+                        [[NSFileManager defaultManager] createDirectoryAtPath:dir withIntermediateDirectories:YES attributes:nil error:NULL];
+                }
+        }
+        databaseFilepath = path;
 }
 @end
