@@ -42,7 +42,7 @@
 				
 				if (result < 0)
 				{
-					[a retain];
+					//[a retain];
 					[self replaceObjectAtIndex: d + stride withObject: b];
 					[self replaceObjectAtIndex: d withObject: a];
 					
@@ -52,24 +52,24 @@
 					{   
 						id a1 = [array1 objectAtIndex:d+stride];
 						id b1 = [array1 objectAtIndex:d];
-						[a1 retain];
+						//[a1 retain];
 						[array1 replaceObjectAtIndex: d + stride withObject:b1];
 						[array1 replaceObjectAtIndex: d withObject: a1];
-						[a1 release];
+						//[a1 release];
 						va_start(argumentList, array1);         
 						while ( ( eachObject = va_arg(argumentList, id) ) ) 
 						{
 							id ax = [eachObject objectAtIndex:d+stride];
 							id bx = [eachObject objectAtIndex:d];
-							[ax retain];
+							//[ax retain];
 							[eachObject replaceObjectAtIndex: d + stride withObject:bx];
 							[eachObject replaceObjectAtIndex: d withObject: ax];
-							[ax release];
+							//[ax release];
 						}
 						va_end(argumentList);
 					}
 					
-					[a release];
+					//[a release];
 					
 					if (stride > d)
 						break;

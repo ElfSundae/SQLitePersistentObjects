@@ -19,8 +19,6 @@
 	NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
 	id ret = [unarchiver decodeObjectForKey:kUIImageArchiverKey];
 	[unarchiver finishDecoding];
-	[unarchiver release];
-	
 	return ret;
 }
 - (NSData *)sqlBlobRepresentationOfSelf {
@@ -28,8 +26,7 @@
 	NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
 	[archiver encodeObject:self forKey:kUIImageArchiverKey];
 	[archiver finishEncoding];
-	[archiver release];
-	return [data autorelease];
+        return data;
 }
 + (BOOL)canBeStoredInSQLite {
 	return YES;

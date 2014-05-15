@@ -59,22 +59,22 @@ static SQLiteInstanceManager *sharedSQLiteManager = nil;
 {
 	return self;
 }
-- (id)retain
-{
-	return self;
-}
-- (NSUInteger)retainCount
-{
-	return UINT_MAX;  //denotes an object that cannot be released
-}
-- (oneway void)release
-{
-	// never release
-}
-- (id)autorelease
-{
-	return self;
-}
+//- (id)retain
+//{
+//	return self;
+//}
+//- (NSUInteger)retainCount
+//{
+//	return UINT_MAX;  //denotes an object that cannot be released
+//}
+//- (oneway void)release
+//{
+//	// never release
+//}
+//- (id)autorelease
+//{
+//	return self;
+//}
 #pragma mark -
 #pragma mark Public Instance Methods
 -(sqlite3 *)database
@@ -158,11 +158,11 @@ static SQLiteInstanceManager *sharedSQLiteManager = nil;
 	}
 }
 #pragma mark -
-- (void)dealloc
-{
-	[databaseFilepath release];
-	[super dealloc];
-}
+//- (void)dealloc
+//{
+//	[databaseFilepath release];
+//	[super dealloc];
+//}
 #pragma mark -
 #pragma mark Private Methods
 
@@ -192,7 +192,7 @@ static SQLiteInstanceManager *sharedSQLiteManager = nil;
 		NSString *saveFileName = [NSString stringWithFormat:@"%@.db", ret];
 		NSString *filepath = [saveDirectory stringByAppendingPathComponent:saveFileName];
 		
-		databaseFilepath = [filepath retain];
+		databaseFilepath = filepath;
 		
 		if (![[NSFileManager defaultManager] fileExistsAtPath:saveDirectory]) 
 			[[NSFileManager defaultManager] createDirectoryAtPath:saveDirectory withIntermediateDirectories:YES attributes:nil error:nil];

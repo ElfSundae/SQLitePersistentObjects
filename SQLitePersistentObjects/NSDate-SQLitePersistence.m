@@ -30,7 +30,7 @@
 	assert(cvt);
 	return d;
 #else
-	NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
+	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
 	[dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSSS"];
 	return [dateFormatter dateFromString:columnData];
 #endif
@@ -45,7 +45,6 @@
 	[dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSSS"];
 	
 	NSString *formattedDateString = [dateFormatter stringFromDate:self];
-	[dateFormatter release];
 	
 	return formattedDateString;
 #endif

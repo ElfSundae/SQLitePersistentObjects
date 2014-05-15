@@ -32,7 +32,7 @@
 	else
 		ret = [[NSNumber alloc] initWithDouble:doubleValue];
 	
-	return [ret autorelease];
+	return ret;
 }
 - (NSString *)sqlColumnRepresentationOfSelf
 {

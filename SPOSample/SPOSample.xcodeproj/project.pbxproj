@@ -16,28 +16,27 @@
 		E7C53CF61738D7820071FB22 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = E7C53CF51738D7820071FB22 /* Default.png */; };
 		E7C53CF81738D7820071FB22 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E7C53CF71738D7820071FB22 /* Default@2x.png */; };
 		E7C53CFA1738D7820071FB22 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E7C53CF91738D7820071FB22 /* Default-568h@2x.png */; };
-		E7C53D021738D7820071FB22 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7C53D011738D7820071FB22 /* SenTestingKit.framework */; };
 		E7C53D031738D7820071FB22 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7C53CE31738D7820071FB22 /* UIKit.framework */; };
 		E7C53D041738D7820071FB22 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7C53CE51738D7820071FB22 /* Foundation.framework */; };
 		E7C53D0C1738D7820071FB22 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E7C53D0A1738D7820071FB22 /* InfoPlist.strings */; };
 		E7C53D0F1738D7820071FB22 /* SPOSampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E7C53D0E1738D7820071FB22 /* SPOSampleTests.m */; };
 		E7C53D191738D79F0071FB22 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E7C53D181738D79F0071FB22 /* libsqlite3.dylib */; };
-		E7C53D6D173910340071FB22 /* NSData-SQLitePersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = E7C53D4E173910340071FB22 /* NSData-SQLitePersistence.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		E7C53D6E173910340071FB22 /* NSDate-SQLitePersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = E7C53D50173910340071FB22 /* NSDate-SQLitePersistence.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		E7C53D6F173910340071FB22 /* NSMutableArray-MultipleSort.m in Sources */ = {isa = PBXBuildFile; fileRef = E7C53D52173910340071FB22 /* NSMutableArray-MultipleSort.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		E7C53D70173910340071FB22 /* NSMutableData-SQLitePersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = E7C53D54173910340071FB22 /* NSMutableData-SQLitePersistence.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		E7C53D71173910340071FB22 /* NSNumber-SQLitePersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = E7C53D56173910340071FB22 /* NSNumber-SQLitePersistence.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		E7C53D72173910340071FB22 /* NSObject-ClassName.m in Sources */ = {isa = PBXBuildFile; fileRef = E7C53D58173910340071FB22 /* NSObject-ClassName.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		E7C53D73173910340071FB22 /* NSObject-MissingKV.m in Sources */ = {isa = PBXBuildFile; fileRef = E7C53D5A173910340071FB22 /* NSObject-MissingKV.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		E7C53D74173910340071FB22 /* NSObject-SQLitePersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = E7C53D5C173910340071FB22 /* NSObject-SQLitePersistence.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		E7C53D75173910340071FB22 /* NSString-NumberStuff.m in Sources */ = {isa = PBXBuildFile; fileRef = E7C53D5E173910340071FB22 /* NSString-NumberStuff.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		E7C53D76173910340071FB22 /* NSString-SQLiteColumnName.m in Sources */ = {isa = PBXBuildFile; fileRef = E7C53D60173910340071FB22 /* NSString-SQLiteColumnName.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		E7C53D77173910340071FB22 /* NSString-SQLitePersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = E7C53D62173910340071FB22 /* NSString-SQLitePersistence.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		E7C53D78173910340071FB22 /* NSString-UppercaseFirst.m in Sources */ = {isa = PBXBuildFile; fileRef = E7C53D64173910340071FB22 /* NSString-UppercaseFirst.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		E7C53D79173910340071FB22 /* SQLiteInstanceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E7C53D66173910340071FB22 /* SQLiteInstanceManager.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		E7C53D7A173910340071FB22 /* SQLitePersistentObject.m in Sources */ = {isa = PBXBuildFile; fileRef = E7C53D68173910340071FB22 /* SQLitePersistentObject.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		E7C53D7B173910340071FB22 /* UIColor-SQLitePersistentObject.m in Sources */ = {isa = PBXBuildFile; fileRef = E7C53D6A173910340071FB22 /* UIColor-SQLitePersistentObject.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		E7C53D7C173910340071FB22 /* UIImage-SQLitePersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = E7C53D6C173910340071FB22 /* UIImage-SQLitePersistence.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		E7C53D6D173910340071FB22 /* NSData-SQLitePersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = E7C53D4E173910340071FB22 /* NSData-SQLitePersistence.m */; };
+		E7C53D6E173910340071FB22 /* NSDate-SQLitePersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = E7C53D50173910340071FB22 /* NSDate-SQLitePersistence.m */; };
+		E7C53D6F173910340071FB22 /* NSMutableArray-MultipleSort.m in Sources */ = {isa = PBXBuildFile; fileRef = E7C53D52173910340071FB22 /* NSMutableArray-MultipleSort.m */; };
+		E7C53D70173910340071FB22 /* NSMutableData-SQLitePersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = E7C53D54173910340071FB22 /* NSMutableData-SQLitePersistence.m */; };
+		E7C53D71173910340071FB22 /* NSNumber-SQLitePersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = E7C53D56173910340071FB22 /* NSNumber-SQLitePersistence.m */; };
+		E7C53D72173910340071FB22 /* NSObject-ClassName.m in Sources */ = {isa = PBXBuildFile; fileRef = E7C53D58173910340071FB22 /* NSObject-ClassName.m */; };
+		E7C53D73173910340071FB22 /* NSObject-MissingKV.m in Sources */ = {isa = PBXBuildFile; fileRef = E7C53D5A173910340071FB22 /* NSObject-MissingKV.m */; };
+		E7C53D74173910340071FB22 /* NSObject-SQLitePersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = E7C53D5C173910340071FB22 /* NSObject-SQLitePersistence.m */; };
+		E7C53D75173910340071FB22 /* NSString-NumberStuff.m in Sources */ = {isa = PBXBuildFile; fileRef = E7C53D5E173910340071FB22 /* NSString-NumberStuff.m */; };
+		E7C53D76173910340071FB22 /* NSString-SQLiteColumnName.m in Sources */ = {isa = PBXBuildFile; fileRef = E7C53D60173910340071FB22 /* NSString-SQLiteColumnName.m */; };
+		E7C53D77173910340071FB22 /* NSString-SQLitePersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = E7C53D62173910340071FB22 /* NSString-SQLitePersistence.m */; };
+		E7C53D78173910340071FB22 /* NSString-UppercaseFirst.m in Sources */ = {isa = PBXBuildFile; fileRef = E7C53D64173910340071FB22 /* NSString-UppercaseFirst.m */; };
+		E7C53D79173910340071FB22 /* SQLiteInstanceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E7C53D66173910340071FB22 /* SQLiteInstanceManager.m */; };
+		E7C53D7A173910340071FB22 /* SQLitePersistentObject.m in Sources */ = {isa = PBXBuildFile; fileRef = E7C53D68173910340071FB22 /* SQLitePersistentObject.m */; };
+		E7C53D7B173910340071FB22 /* UIColor-SQLitePersistentObject.m in Sources */ = {isa = PBXBuildFile; fileRef = E7C53D6A173910340071FB22 /* UIColor-SQLitePersistentObject.m */; };
+		E7C53D7C173910340071FB22 /* UIImage-SQLitePersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = E7C53D6C173910340071FB22 /* UIImage-SQLitePersistence.m */; };
 		E7C53D7F173915CF0071FB22 /* Product.m in Sources */ = {isa = PBXBuildFile; fileRef = E7C53D7E173915CF0071FB22 /* Product.m */; };
 		E7C53D85173923790071FB22 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E7C53D84173923790071FB22 /* RootViewController.m */; };
 		E7C53D93173952590071FB22 /* UIActionSheet+ESBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = E7C53D90173952590071FB22 /* UIActionSheet+ESBlock.m */; };
@@ -68,8 +67,7 @@
 		E7C53CF51738D7820071FB22 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		E7C53CF71738D7820071FB22 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		E7C53CF91738D7820071FB22 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
-		E7C53D001738D7820071FB22 /* SPOSampleTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SPOSampleTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
-		E7C53D011738D7820071FB22 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		E7C53D001738D7820071FB22 /* SPOSampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SPOSampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E7C53D091738D7820071FB22 /* SPOSampleTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SPOSampleTests-Info.plist"; sourceTree = "<group>"; };
 		E7C53D0B1738D7820071FB22 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		E7C53D0D1738D7820071FB22 /* SPOSampleTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SPOSampleTests.h; sourceTree = "<group>"; };
@@ -135,7 +133,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E7C53D021738D7820071FB22 /* SenTestingKit.framework in Frameworks */,
 				E7C53D031738D7820071FB22 /* UIKit.framework in Frameworks */,
 				E7C53D041738D7820071FB22 /* Foundation.framework in Frameworks */,
 			);
@@ -161,7 +158,7 @@
 			isa = PBXGroup;
 			children = (
 				E7C53CE01738D7820071FB22 /* SPOSample.app */,
-				E7C53D001738D7820071FB22 /* SPOSampleTests.octest */,
+				E7C53D001738D7820071FB22 /* SPOSampleTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -173,7 +170,6 @@
 				E7C53CE31738D7820071FB22 /* UIKit.framework */,
 				E7C53CE51738D7820071FB22 /* Foundation.framework */,
 				E7C53CE71738D7820071FB22 /* CoreGraphics.framework */,
-				E7C53D011738D7820071FB22 /* SenTestingKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -314,8 +310,8 @@
 			);
 			name = SPOSampleTests;
 			productName = SPOSampleTests;
-			productReference = E7C53D001738D7820071FB22 /* SPOSampleTests.octest */;
-			productType = "com.apple.product-type.bundle";
+			productReference = E7C53D001738D7820071FB22 /* SPOSampleTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -323,6 +319,7 @@
 		E7C53CD81738D7820071FB22 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastTestingUpgradeCheck = 0510;
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = www.0x123.com;
 			};
@@ -509,6 +506,7 @@
 		E7C53D131738D7820071FB22 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SPOSample/SPOSample-Prefix.pch";
 				INFOPLIST_FILE = "SPOSample/SPOSample-Info.plist";
@@ -521,6 +519,7 @@
 		E7C53D141738D7820071FB22 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SPOSample/SPOSample-Prefix.pch";
 				INFOPLIST_FILE = "SPOSample/SPOSample-Info.plist";
@@ -537,13 +536,13 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
 					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+					"$(inherited)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SPOSample/SPOSample-Prefix.pch";
 				INFOPLIST_FILE = "SPOSampleTests/SPOSampleTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
 		};
@@ -554,13 +553,13 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
 					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+					"$(inherited)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SPOSample/SPOSample-Prefix.pch";
 				INFOPLIST_FILE = "SPOSampleTests/SPOSampleTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;
 		};

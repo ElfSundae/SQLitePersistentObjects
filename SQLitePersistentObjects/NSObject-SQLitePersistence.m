@@ -38,8 +38,7 @@
 	NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
 	[archiver encodeObject:self forKey:[self className]];
 	[archiver finishEncoding];
-	[archiver release];
-	return [data autorelease];
+	return data;
 }
 + (BOOL)shouldBeStoredInBlob
 {
@@ -53,7 +52,6 @@
 	NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
 	id ret = [unarchiver decodeObjectForKey:[self className]];
 	[unarchiver finishDecoding];
-	[unarchiver release];
 	
 	return ret;
 }

@@ -16,9 +16,9 @@
 // included Readme.txt file
 // ----------------------------------------------------------------------
 
-#if __has_feature(objc_arc)
-#error All SQLitePersistentObjects files must be compiled with Non-ARC. Use -fno-objc-arc flag.
-#endif
+//#if __has_feature(objc_arc)
+//#error All SQLitePersistentObjects files must be compiled with Non-ARC. Use -fno-objc-arc flag.
+//#endif
 
 #import "SQLitePersistentObject.h"
 #import "SQLiteInstanceManager.h"
@@ -36,7 +36,7 @@
 static NSArray* sqlpo_class_getSubclasses(Class parentClass)
 {
     int numClasses 	= objc_getClassList(NULL, 0);
-    Class* classes 	= malloc(sizeof(Class) * numClasses);
+        Class* classes 	= (__unsafe_unretained Class *)malloc(sizeof(Class) * numClasses);
     numClasses 		= objc_getClassList(classes, numClasses);
 	
     NSMutableArray* result = [[NSMutableArray alloc] init];
@@ -60,7 +60,6 @@ static NSArray* sqlpo_class_getSubclasses(Class parentClass)
     free(classes);
 	
 	NSArray* tmp = [NSArray arrayWithArray:result];
-	[result release];
 	
     return tmp;
 }
@@ -171,15 +170,15 @@ static NSMutableDictionary* _knownTables;
 		  _knownTables = [[NSMutableDictionary alloc] init];
 	});
 	
-	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-	NSArray* subclasses = sqlpo_class_getSubclasses([self class]);
-	
-	[subclasses enumerateObjectsUsingBlock:^(Class klass, NSUInteger idx, BOOL *stop) 
-	{
-		[_knownTables setObject:NSStringFromClass(klass) forKey:[klass tableName]];
-	}];
-	
-	[pool drain];
+        @autoreleasepool {
+                NSArray* subclasses = sqlpo_class_getSubclasses([self class]);
+                
+                [subclasses enumerateObjectsUsingBlock:^(Class klass, NSUInteger idx, BOOL *stop)
+                 {
+                         [_knownTables setObject:NSStringFromClass(klass) forKey:[klass tableName]];
+                 }];
+                
+        }
 }
 
 + (double)performSQLAggregation: (NSString *)query, ...
@@ -201,7 +200,6 @@ static NSMutableDictionary* _knownTables;
 				result = sqlite3_column_double(stmt, 0);
 			sqlite3_finalize(stmt);
 		}
-		[queryString release];
 	}];
 	
 	return result;
@@ -238,7 +236,6 @@ static NSMutableDictionary* _knownTables;
 	[SQLitePersistentObject performUsingDBOperationQueue:
 	 ^{
 		 result = [self _findFirstByCriteria:queryString];
-		 [queryString release];
 	 }];
 	
 	return result;
@@ -252,7 +249,6 @@ static NSMutableDictionary* _knownTables;
 	NSString *queryString = [[NSString alloc] initWithFormat:criteriaString arguments:argumentList];
 	
 	 NSArray *array = [self _findByCriteria:queryString];
-	 [queryString release];
 	 
 	 if (array != nil && [array count] > 0)
 	 {
@@ -282,7 +278,6 @@ static NSMutableDictionary* _knownTables;
 		NSString *countQuery;
 		
 		countQuery = [NSString stringWithFormat:@"SELECT COUNT(*) FROM %@ %@", [self tableName], queryString];
-		[queryString release];
 		sqlite3 *database = [[SQLiteInstanceManager sharedManager] database];
 		sqlite3_stmt *statement;
 		if (sqlite3_prepare_v2(database, [countQuery UTF8String], -1, &statement, nil) == SQLITE_OK) 
@@ -345,7 +340,6 @@ static NSMutableDictionary* _knownTables;
 	[SQLitePersistentObject performUsingDBOperationQueue:
 	^{
 		result = [self _findByCriteria:queryString];
-		[queryString release];
 	}];
 	
 	return result;
@@ -366,7 +360,6 @@ static NSMutableDictionary* _knownTables;
 	NSString *queryString = [[NSString alloc] initWithFormat:formatSafeString arguments:argumentList];
 	
 	NSString *query = [NSString stringWithFormat:@"SELECT pk,* FROM %@ %@", [[self class] tableName], queryString];
-	[queryString release];
 	
 	sqlite3_stmt *statement;
 	if (sqlite3_prepare_v2( database, [query UTF8String], -1, &statement, NULL) == SQLITE_OK)
@@ -378,7 +371,7 @@ static NSMutableDictionary* _knownTables;
 			id oneItem = [objectMap objectForKey:memoryMapKey];
 			if (oneItem)
 			{
-				[ret addObject:[oneItem retain]];
+				[ret addObject:oneItem];
 				continue;
 			}
 			
@@ -674,7 +667,6 @@ static NSMutableDictionary* _knownTables;
 			[oneItem makeClean];
 			
 			[ret addObject:oneItem];
-			[oneItem release];
 		}
 		sqlite3_finalize(statement);
 	}
@@ -724,7 +716,6 @@ static NSMutableDictionary* _knownTables;
 	NSString *queryString = [[NSString alloc] initWithFormat:criteriaString arguments:argumentList];
 	
 	[query appendFormat:@" FROM %@ %@ ORDER BY PK", [[self class] tableName], queryString];
-	[queryString release];
 	
 	for (int i = 0; i <= [theProps count]; i++)
 		[ret addObject:[NSMutableArray array]];
@@ -1371,7 +1362,6 @@ static NSMutableDictionary* _knownTables;
 		va_start(argumentList, filter);
 		NSString *queryString = [[NSString alloc] initWithFormat:filter arguments:argumentList];
 		q = [q stringByAppendingFormat:@" AND %@", queryString];
-		[queryString release];
 	}
 
 	return [cls findByCriteria:q];
@@ -1382,7 +1372,7 @@ static NSMutableDictionary* _knownTables;
 	// Added variadic ability to all criteria accepting methods -SLyons (10/03/2009)
 	va_list argumentList;
 	va_start(argumentList, filter);
-	NSString *queryString = [[[NSString alloc] initWithFormat:filter arguments:argumentList] autorelease];
+	NSString *queryString = [[NSString alloc] initWithFormat:filter arguments:argumentList];
 	return [self findRelated:cls forProperty:[[self class] tableName] filter:queryString];	
 }
 
@@ -1509,7 +1499,6 @@ static NSMutableDictionary* _knownTables;
 		[self removeObserver:self forKeyPath:oneProp];
 	
 	[[self class] unregisterObject:self];
-	[super dealloc];
 }
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
