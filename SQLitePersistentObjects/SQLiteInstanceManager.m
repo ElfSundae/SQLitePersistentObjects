@@ -127,7 +127,7 @@ static SQLiteInstanceManager *sharedSQLiteManager = nil;
 }
 - (void)setCacheSize:(NSUInteger)pages
 {
-	NSString *updateSQL = [NSString stringWithFormat:@"PRAGMA cache_size=%d", pages];
+	NSString *updateSQL = [NSString stringWithFormat:@"PRAGMA cache_size=%lu", (unsigned long)pages];
 	[self executeUpdateSQL:updateSQL];
 }
 - (void)setLockingMode:(SQLITE3LockingMode)mode
