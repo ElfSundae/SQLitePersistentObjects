@@ -424,7 +424,7 @@ static NSMutableDictionary* _knownTables;
 					else if ([colType isEqualToString:@"f"] || // float
 							 [colType isEqualToString:@"d"] )  // double
 					{
-						NSNumber *colVal = [NSNumber numberWithFloat:sqlite3_column_double(statement, i)];
+						NSNumber *colVal = [NSNumber numberWithDouble:sqlite3_column_double(statement, i)];
 						[oneItem setValue:colVal forKey:propName];
 					}
 					else if ([colType isEqualToString:@"c"] ||	// char
