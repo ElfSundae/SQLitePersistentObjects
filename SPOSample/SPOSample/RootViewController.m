@@ -49,6 +49,26 @@
         [self loadPagingData:NO];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+        [super viewDidAppear:animated];
+        
+        NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
+        [Product beginTransaction];
+        int i = 1000;
+        while (i-- > 0) {
+                Product *p = [[Product alloc] init];
+                p.productId = [NSString stringWithFormat:@"%d", i];
+                p.price = 1.9 + (double)rand() / ((double)RAND_MAX/(999.99 - 1.9));
+                p.name = [NSString stringWithFormat:@"name %d", (int)arc4random()];
+                p.addDate = [[NSDate date] timeIntervalSince1970];
+                //[p save];
+                [p bulkSave];
+        }
+        [Product endTransaction];
+        NSLog(@"time: %f", [[NSDate date] timeIntervalSince1970] - now);
+}
+
 - (void)navRefreshItemPressed:(id)sender
 {
         [self loadPagingData:NO];
@@ -124,6 +144,7 @@ static NSUInteger _paging = 10;
 
 - (void)loadPagingData:(BOOL)isMore
 {
+        return;
         if (!isMore) {
                 [self.list removeAllObjects];
         }

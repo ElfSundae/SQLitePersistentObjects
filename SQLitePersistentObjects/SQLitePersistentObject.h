@@ -160,6 +160,10 @@
  */
 -(void)save;
 
++ (void)beginTransaction;
+- (void)bulkSave;
++ (void)endTransaction;
+
 /**
  Force the object to be marked as dirty so save takes place.
  */
