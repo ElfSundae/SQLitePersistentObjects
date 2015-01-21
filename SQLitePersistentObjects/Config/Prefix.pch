@@ -1,0 +1,16 @@
+//
+//  Prefix.pch
+//  SQLitePersistentObjects
+//
+//  Created by Elf Sundae on 1/22/15.
+//  Copyright (c) 2015 www.0x123.com. All rights reserved.
+//
+
+#ifndef SQLitePersistentObjects_Prefix_pch
+#define SQLitePersistentObjects_Prefix_pch
+
+#ifdef __OBJC__
+        #import <Foundation/Foundation.h>
+#endif
+
+#endif

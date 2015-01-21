@@ -1,15 +1,17 @@
 Introduction
 ======================
 
-Persistent Objects for Cocoa & Cocoa Touch that using SQLite. <br>
+Persistent Objects for Cocoa & Cocoa Touch that using SQLite.
+
 This project based on http://code.google.com/p/sqlitepersistentobjects and https://bitbucket.org/gabrielayuso/sqlitepersistentobjects (make it thread safely)
 
 Setup
 =====================
 
-1. Add `SQLitePersistentObjects` directory to your Xcode project. 
-2. Link the `libsqlite3.dylib` framework.
-3. `#import "SQLitePersistentObject.h"` and subclass `SQLitePersistentObject` for your data model.
+1. Add `SQLitePersistentObjects.framework` to your Xcode project
+2. Link the `libsqlite3.dylib`
+3. Add `-ObjC` to your project's settings `Other Linker Flags`
+4. `#import <SQLitePersistentObjects/SQLitePersistentObjects.h>` and subclass `SQLitePersistentObject` for your data model
 
 
 Usage
