@@ -827,9 +827,13 @@ static NSMutableDictionary* _knownTables;
 
 + (void)performUsingDBOperationQueue:(void(^)(void))block
 {
+#if !OS_OBJECT_USE_OBJC_RETAIN_RELEASE
 	dispatch_retain([SQLitePersistentObject DBOperationQueue]);
+#endif
 	dispatch_sync([SQLitePersistentObject DBOperationQueue], block);
-	dispatch_release([SQLitePersistentObject DBOperationQueue]);	
+#if !OS_OBJECT_USE_OBJC_RETAIN_RELEASE
+	dispatch_release([SQLitePersistentObject DBOperationQueue]);
+#endif
 }
 
 #pragma mark -
